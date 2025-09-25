@@ -120,11 +120,6 @@
             z-index: 102;
             overflow-y: auto;
             padding-top: 10px;
-            /* --- ✨ Novas Bordas Adicionadas Aqui --- */
-            border-right: 3px solid;
-            border-image: linear-gradient(to bottom, #964B00, #3a3a3a, #964B00) 1;
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
         }
 
         .sidebar.active {
@@ -149,23 +144,30 @@
             color: #fff;
             display: block;
             transition: 0.3s;
+            /* ✨ ADICIONADO BORDA INFERIOR PARA SEPARAR OS ITENS */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .sidebar a:hover {
             color: #f1f1f1;
             background-color: rgba(102, 102, 102, 0.8);
         }
+        
+        /* Remove a borda do último item do menu */
+        .sidebar a:last-of-type {
+            border-bottom: none;
+        }
 
         .sidebar a.button.meus {
             margin-top: 20px;
-            background-color: #964B00;
-            color: #121212;
+            /* 🎨 COR ALTERADA PARA ROXO */
+            background-color: #6a0dad; 
+            color: #fff; /* Melhorando o contraste do texto */
             text-align: center;
             border-radius: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px; /* Adicionado para não encostar na borda */
         }
 
         .sidebar a.button.meus i {
@@ -270,8 +272,9 @@
             margin-top: 15px;
             padding: 10px;
             border: none;
-            background-color: #964B00;
-            color: #121212;
+            /* 🎨 COR ALTERADA PARA ROXO */
+            background-color: #6a0dad;
+            color: #fff; /* Melhorando o contraste do texto */
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
@@ -279,7 +282,8 @@
         }
 
         .card button:hover {
-            background-color: #bbb;
+            /* Efeito hover consistente com o novo tema */
+            background-color: #7b2cbf;
         }
 
         /* Footer */
