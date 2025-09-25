@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow-x: hidden; 
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: url('https://i.pinimg.com/originals/49/f4/16/49f416a4d35244412c69cf7113bc27ba.gif') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+       .particle {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            top: 0; 
+            background-image: url('https://files.catbox.moe/08k59c.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: fall 10s ease-in-out infinite, rotate 5s linear infinite;
+        }
+        #particles {
+             position: fixed; 
+             top: 0;
+             left: 0;
+             width: 100vw;
+             height: 100vh;
+             pointer-events: none; 
+             z-index: -1;
+        }
+
+        @keyframes fall {
+             0% {
+             transform: translateY(-100px) rotate(0deg);
+             opacity: 1;
+             }
+             100% {
+             transform: translateY(100vh) rotate(360deg);
+             opacity: 0;
+             }
+        }
+
+        
+        .top-bar {
+            width: 100%;
+            height: 60px;
+            background-color: rgba(30, 30, 30, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 101;
+        }
+
+        .api-icon {
+            font-size: 28px;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 30px;
+            cursor: pointer;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            font-size: 26px;
+        }
+
+        .notification-message {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            z-index: 103;
+            font-size: 14px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            height: calc(100vh - 60px);
+            background-color: rgba(43, 43, 43, 0.9);
+            position: fixed;
+            left: -250px;
+            top: 60px;
+            transition: left 0.3s ease-in-out;
+            z-index: 102;
+            overflow-y: auto;
+            padding-top: 10px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .menu {
+            list-style: none;
+            padding: 20px;
+        }
+
+        .menu-item {
+            margin-bottom: 10px;
+        }
+
+        .menu-item > a {
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(68, 68, 68, 0.8);
+            cursor: pointer;
+        }
+
+        .menu-item > a:hover {
+            background-color: rgba(102, 102, 102, 0.8);
+        }
+
+        .submenu {
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
+
+        .submenu li {
+            padding: 8px;
+        }
+
+        .submenu li a {
+            text-decoration: none;
+            color: #ddd;
+            display: block;
+        }
+
+        .submenu li a:hover {
+            color: #fff;
+        }
+
+        .dashboard-content {
+            flex: 1;
+            padding: 80px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .dashboard-title {
+            width: 90%;
+            max-width: 800px;
+            text-align: left;
+            font-size: 18px; 
+            font-weight: bold;
+            color: #ccc; 
+            margin-bottom: 10px;
+        }
+
+        .dashboard-title span.dashboard-text {
+            color: #eee; 
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 35px; 
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 95%; 
+            max-width: 850px; 
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .card h2 {
+            font-size: 20px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 24px;
+            color: #ddd;
+        }
+
+        .card button {
+            margin-top: 15px;
+            padding: 10px;
+            border: none;
+            background-color: #964B00;
+            color: #121212;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .card button:hover {
+            background-color: #bbb;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px;
+            background: rgba(30, 30, 30, 0.8);
+            font-size: 14px;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+</style>
+
+</head>
+<body>
+<div class="particles" id="particles"></div>
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        <div style="display: flex; align-items: center;">
+            <span class="material-icons api-icon">api</span>
+            <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        </div>
+        <button class="notification-btn" onclick="toggleNotification()"> 
+            <span class="material-icons">notifications</span>
+        </button>
+        <div class="notification-message" id="notification-message">Nosso dashboard foi atualizado, com um desing mais sofisticado e organizado 😊</div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul class="menu">
+            <li class="menu-item">
+                <a onclick="toggleSubMenu('dashboard-submenu')"> DOWNLOADS <span class="material-icons">expand_more</span></a>
+                <ul class="submenu" id="dashboard-submenu">
+                    <li><a href="download/play-audio?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play audio</a></li>
+                    <li><a href="download/play-audio/v2?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play audio 2</a></li>
+                    <li><a href="download/play-audio/v3?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play audio 3</a></li>
+                    <li><a href="download/play-audio/v4?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play audio 4</a></li>
+                    <li><a href="download/play-audio/v5?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play audio 5</a></li>
+                    <li><a href="download/play-video?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play video</a></li>
+                    <li><a href="download/play-video/v2?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play video 2</a></li>
+                    <li><a href="download/play-video/v3?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play video 3</a></li>
+                    <li><a href="download/play-video/v4?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play video 4</a></li>
+                    <li><a href="download/play-video/v5?&url=https://youtube.com/watch?v=Wxwa4eZs-GA">• Play video 5</a></li>
+                    <li><a href="download/instagram?&url=https://www.instagram.com/reel/DBjebXyRqGA/?igsh=ODh0YzVjZnhtMTRj">• Instagram Download</a></li>
+                    <li><a href="download/instagram/v2?&url=https://www.instagram.com/reel/DBjebXyRqGA/?igsh=ODh0YzVjZnhtMTRj">• Instagram Download 2</a></li>
+                    <li><a href="download/spotify/v2?&url=https://open.spotify.com/track/7xPGvZaG9W7UOrCgEwbONe">• Spotify Download</a></li>
+                    <li><a href="download/spotify?&url=https://open.spotify.com/track/7xPGvZaG9W7UOrCgEwbONe">• Spotify Download 2</a></li>
+                    <li><a href="/download/tiktok?url=https://vm.tiktok.com/ZMktb4CPJ/">• Tiktok Download</a></li>
+                    <li><a href="/download/twitter?url=https://x.com/knockback_games/status/1851334573763735779">• Twitter Download</a></li>
+                    <li><a href="/download/twitter/v2?url=https://x.com/knockback_games/status/1851334573763735779">• Twitter Download 2</a></li>
+                    <li><a href="/download/facebook?url=https://www.facebook.com/share/r/1B5sDSg6EU/">• Facebook Download</a></li>
+                    <li><a href="/download/kwai?url=https://k.kwai.com/p/UrU4BCfb">• Kwai Download</a></li>
+                    <li><a href="/download/pinterest-mp4?link=https://pin.it/3V65P7rbg">• Pinterest-MP4 Download</a></li>
+                    <li><a href="/download/soundcloud?url=https://x.com/knockback_games/status/1851334573763735779">• SoundCloud Download</a></li>
+                    <li><a href="/download/googledrive?url=https://x.com/knockback_games/status/1851334573763735779">• GoogleDrive Download</a></li>
+                    <li><a href="/download/mediafire?url=https://www.mediafire.com/file/4peqvhpk70phtel/download_%25281%2529.js/file">• Mediafire Download</a></li>
+                    <li><a href="/download/capcut?&url=https://www.capcut.com/t/ZmFpDfDpH/">• Capcut Download</a></li>
+                </ul>
+                
+             <li class="menu-item">
+                <a onclick="toggleSubMenu('canvas-submenu')"> CANVAS<span class="material-icons">expand_more</span></a>
+                  <ul class="submenu" id="canvas-submenu">
+                    <li><a href="/api/ping-card?botName=YuxinzeApis&osType=Linux&cpuUsage=15&uptime=12h&memoryUsed=512MB&background=https://files.catbox.moe/59c16o.jpg&avatar=https://files.catbox.moe/2iksfp.jpg">• Ping Card</a></li>
+                    <li><a href="/canvas/musicard?thumbnail=https://files.catbox.moe/k3itl7.jpg&music_name=Yuxinze&artist_name=Apis&time_end=3:00">• Music Card</a></li>
+                    <li><a href="/canvas/musicard/v2?thumbnail=https://files.catbox.moe/k3itl7.jpg&music_name=Yuxinze&artist_name=Apis&time_end=3:00">• Music Card V2</a></li>
+                    <li><a href="/canvas/removebg?&url=https://files.catbox.moe/1d8g48.png">• Removedor de Fundo</a></li>
+                </ul>
+                     
+             <li class="menu-item">
+                <a onclick="toggleSubMenu('canvascriativos-submenu')"> CANVAS CRIATIVOS<span class="material-icons">expand_more</span></a>
+                  <ul class="submenu" id="canvascriativos-submenu">
+                     <li><a href="/canvas/criativos/lgbt?img=https://files.catbox.moe/ngbf5r.jpg">• lgbt</a></li>
+                    <li><a href="/canvas/criativos/blur?img=https://files.catbox.moe/ngbf5r.jpg">• Blur</a></li>
+                    <li><a href="/canvas/criativos/invert?img=https://files.catbox.moe/ngbf5r.jpg">• Invert</a></li>
+                    <li><a href="/canvas/criativos/sepia?img=https://files.catbox.moe/ngbf5r.jpg">• Sepia</a></li>
+                    <li><a href="/canvas/criativos/ad?img=https://files.catbox.moe/ngbf5r.jpg">• Ad</a></li>
+                    <li><a href="/canvas/criativos/affect?img=https://files.catbox.moe/ngbf5r.jpg">• Affect</a></li>
+                    <li><a href="/canvas/criativos/beautiful?img=https://files.catbox.moe/ngbf5r.jpg">• Beautiful</a></li>
+                    <li><a href="/canvas/criativos/bobross?img=https://files.catbox.moe/ngbf5r.jpg">• Bobross</a></li>
+                    <li><a href="/canvas/criativos/confusedstonk?img=https://files.catbox.moe/ngbf5r.jpg">• Confused Stok</a></li>
+                    <li><a href="/canvas/criativos/delete?img=https://files.catbox.moe/ngbf5r.jpg">• Delete</a></li>
+                    <li><a href="/canvas/criativos/discordbalck?img=https://files.catbox.moe/ngbf5r.jpg">• Discord Black</a></li>
+                    <li><a href="/canvas/criativos/discordblue?img=https://files.catbox.moe/ngbf5r.jpg">• Discord Blue</a></li>
+                    <li><a href="/canvas/criativos/facepalm?img=https://files.catbox.moe/ngbf5r.jpg">• Face Palm</a></li>
+                    <li><a href="/canvas/criativos/hitler?img=https://files.catbox.moe/ngbf5r.jpg">• Hitler</a></li>
+                    <li><a href="/canvas/criativos/jail?img=https://files.catbox.moe/ngbf5r.jpg">• Jail</a></li>
+                    <li><a href="/canvas/criativos/karaba?img=https://files.catbox.moe/ngbf5r.jpg">• Karaba</a></li>
+                    <li><a href="/canvas/criativos/mms?img=https://files.catbox.moe/ngbf5r.jpg">• Mms</a></li>
+                    <li><a href="/canvas/criativos/notstonk?img=https://files.catbox.moe/ngbf5r.jpg">• Not Stonk</a></li>
+                    <li><a href="/canvas/criativos/poutine?img=https://files.catbox.moe/ngbf5r.jpg">• Poutine</a></li>
+                    <li><a href="/canvas/criativos/rip?img=https://files.catbox.moe/ngbf5r.jpg">• Rip</a></li>
+                    <li><a href="/canvas/criativos/stonk?img=https://files.catbox.moe/ngbf5r.jpg">• Stonk</a></li>
+                    <li><a href="/canvas/criativos/tatoo?img=https://files.catbox.moe/ngbf5r.jpg">• Tatoo</a></li>
+                    <li><a href="/canvas/criativos/trash?img=https://files.catbox.moe/ngbf5r.jpg">• Thomas</a></li>
+                    <li><a href="/canvas/criativos/circle?img=https://files.catbox.moe/ngbf5r.jpg">• Circle</a></li>
+                </ul>
+                     
+             <li class="menu-item">
+                <a onclick="toggleSubMenu('figurinhas-submenu')"> FIGURINHAS<span class="material-icons">expand_more</span></a>
+                 <ul class="submenu" id="figurinhas-submenu">
+                     <li><a href="sticker/aleatorio">• Stickers</a></li>  
+                     <li><a href="/canvas/attp?texto=Yuki%20Modz">• Attp</a></li>  
+                </ul>
+                      
+            <li class="menu-item">
+                <a onclick="toggleSubMenu('stalks-submenu')"> STALKS<span class="material-icons">expand_more</span></a>
+                <ul class="submenu" id="stalks-submenu">
+                    <li><a href="/stalks/insta-stalk?username=rigbixxz">• Instagram Stalk</a></li>
+                    <li><a href="/stalks/tiktok-stalk?username=Minecraft">• Tiktok Stalk</a></li>
+                    <li><a href="/stalks/mobile-legends?id=1809094683&zoneId=1740">• Mobile Legends Stalk</a></li>
+                    <li><a href="/stalks/xbox?username=UnreadLake527">• Xbox stalk</a></li>
+                </ul>
+                
+            <li class="menu-item">
+                <a onclick="toggleSubMenu('pesquisas-submenu')"> PESQUISAS<span class="material-icons">expand_more</span></a>
+                <ul class="submenu" id="pesquisas-submenu">
+                    <li><a href="/pesquisas/ytsearch?query=nightcore%20heroes">• Youtube Search</a></li>
+                    <li><a href="/pesquisas/tiktok-search?query=gatinhos">• Tiktok Search/dl</a></li>
+                    <li><a href="/pesquisas/pinterest?q=gato">• Pinterest Search</a></li>
+                    <li><a href="/pesquisas/spotify?query=the%20bard%20song">• Spotify Search</a></li>
+                    <li><a href="/pesquisas/pensador?pesquisa=amor">• Pensador Search</a></li>
+                    <li><a href="/pesquisas/wikimedia-search?query=japan">• Wikimedia Search</a></li>
+                    <li><a href="/pesquisas/random-grupos">• Explorar Grupos</a></li>
+                    <li><a href="/pesquisas/wallpaper?title=Cat">• Wallpaper Search</a></li>
+                    <li><a href="/pesquisas/gooleit?query=javascript">• Google it</a></li>
+                </ul>
+                
+            <li class="menu-item">
+                <a onclick="toggleSubMenu('ias-submenu')"> IAS<span class="material-icons">expand_more</span></a>
+                <ul class="submenu" id="ias-submenu">
+                   <li><a href="/ias/deepseek?texto=faca%20uma%20case%20em%20javascript">• DeepSeek IA</a></li>
+                   <li><a href="/ias/deepseek-coder?texto=faca%20uma%20case%20em%20js">• DeepSeek-Coder IA</a></li>
+                   <li><a href="/ias/llama-8b?texto=ola">• Llama-3.1 IA</a></li>
+                   <li><a href="/ias/llama-3b?texto=ola">• Llama-3.2 IA</a></li>
+                   <li><a href="/ias/mistral-7b?texto=oque%20significa%20agua?">• Mistral IA</a></li>
+                   <li><a href="/ias/gemini?prompt=oque%20é%20agua?">• Gemini IA</a></li>
+                   <li><a href="/ias/sqlcoder?texto=oque%20significa%20agua?">• Sqlcoder IA</a></li>
+                   <li><a href="/ias/hercaiIA?q=gato">• Hercai IA</a></li>
+                   <li><a href="/ias/gerarimg?q=casas%20japonesas">• Gerador de Imagens IA</a></li>
+                </ul>
+                
+            <li class="menu-item">
+                <a onclick="toggleSubMenu('ferramentas-submenu')"> FERRAMENTAS<span class="material-icons">expand_more</span></a>
+                <ul class="submenu" id="ferramentas-submenu">
+                    <li><a href="/geradores/fazernick?nome=YUXINZE%20APIS">• Gerar Nick</a></li>
+                    <li><a href="/ferramentas/ssweb?url=http://speedhosting.cloud:2009&tipo=tablet">• Print Web</a></li>
+                    <li><a href="/ferramentas/hd?img=https://files.catbox.moe/k3itl7.jpg">• HD</a></li>
+                </ul>
+                
+            <li class="menu-item">
+                <a onclick="toggleSubMenu('settings-submenu')">⚙ Suporte Tecnico <span class="material-icons">expand_more</span></a>
+                <ul class="submenu" id="settings-submenu">
+                    <li><a href="https://wa.me/555194709091&text=Olá%20preciso%20de%20suporte%20na%20Yuxinze.">Suporte Técnico</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Conteúdo do Dashboard -->
+<div class="dashboard-content">
+    <div class="dashboard-title">Painel / <span class="dashboard-text">Dashboard</span></div>
+    
+    <div class="card">
+        <h2>Relógio</h2>
+        <p id="clock"></p>
+        
+        <p id="greeting"></p>
+    </div>
+    
+    <div class="card">
+        <h2>SPEED HOSTING</h2>
+        <p>Acesse a melhor Hosting da atualidade com planos que cabem no seu bolso.</p>
+        <button onclick="window.open('https://speedhosting.cloud', '_blank')">Acessar</button>
+    </div>
+    
+    <div class="card">
+        <h2>CASES DA API</h2>
+        <p>Cases prontas para facilitar o uso da Rest API.</p>
+        <button onclick="window.open('https://mega.nz/file/nOAwFQDK#dq0DZiWWzWw7AYuXX1Xx-59oUs3a6A6yfS0CxvoSQHg', '_blank')">Baixar</button>
+    </div>
+    
+    <div class="card">
+        <h2>ROTAS</h2>
+        <p>+ 50 Rotas disponíveis atualmente.</p>
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="footer">
+    Copyright © Yuxinze Channel
+</div>
+
+<script>
+
+    
+    function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+
+    for (let i = 0; i < 30; i++) { 
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        particle.style.left = `${Math.random() * 100}%`;
+
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+
+        particle.style.animationDuration = `${5 + Math.random() * 5}s`;
+
+        particlesContainer.appendChild(particle);
+    }
+}
+
+createParticles();
+
+   
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('active');
+    }
+
+   
+    function toggleSubMenu(id) {
+        const submenu = document.getElementById(id);
+        submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+    }
+
+   
+    function toggleNotification() {
+        const notification = document.getElementById('notification-message');
+        notification.style.display = notification.style.display === 'block' ? 'none' : 'block';
+    }
+
+  
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+        
+       
+        const greetingElement = document.getElementById('greeting');
+        if (hours >= 5 && hours < 12) {
+            greetingElement.textContent = "Bom dia!";
+        } else if (hours >= 12 && hours < 18) {
+            greetingElement.textContent = "Boa tarde!";
+        } else if (hours >= 18 && hours < 24) {
+            greetingElement.textContent = "Boa noite!";
+        } else {
+            greetingElement.textContent = "Boa madrugada!";
+        }
+    }
+    setInterval(updateClock, 1000);
+    updateClock(); 
+</script>
